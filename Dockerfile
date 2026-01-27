@@ -1,22 +1,29 @@
-FROM python:3.11-slim
+# Build Stage
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy source code
+COPY . .
 
-# Copy application code
-COPY app/ ./app/
-COPY models/ ./models/
+# Build for web
+# Set API URL to empty string to ensure relative paths are used in the build
+ENV EXPO_PUBLIC_API_URL=""
+RUN npx expo export -p web
 
-# Expose port
-EXPOSE 8000
+# Serve Stage
+FROM nginx:alpine
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Copy built assets
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
