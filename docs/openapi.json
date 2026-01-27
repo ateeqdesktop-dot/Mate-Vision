@@ -1,0 +1,306 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Mate Vision API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Health Check",
+                "operationId": "health_check__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/predict/car-accident": {
+            "post": {
+                "summary": "Predict Car Accident",
+                "operationId": "predict_car_accident_api_v1_predict_car_accident_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_predict_car_accident_api_v1_predict_car_accident_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PredictionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/predict/weapon": {
+            "post": {
+                "summary": "Predict Weapon",
+                "operationId": "predict_weapon_api_v1_predict_weapon_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_predict_weapon_api_v1_predict_weapon_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PredictionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/models": {
+            "get": {
+                "summary": "Get Models",
+                "operationId": "get_models_api_v1_models_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ModelsResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_predict_car_accident_api_v1_predict_car_accident_post": {
+                "title": "Body_predict_car_accident_api_v1_predict_car_accident_post",
+                "required": [
+                    "file"
+                ],
+                "type": "object",
+                "properties": {
+                    "file": {
+                        "title": "File",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                }
+            },
+            "Body_predict_weapon_api_v1_predict_weapon_post": {
+                "title": "Body_predict_weapon_api_v1_predict_weapon_post",
+                "required": [
+                    "file"
+                ],
+                "type": "object",
+                "properties": {
+                    "file": {
+                        "title": "File",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                }
+            },
+            "BoundingBox": {
+                "title": "BoundingBox",
+                "required": [
+                    "x1",
+                    "y1",
+                    "x2",
+                    "y2"
+                ],
+                "type": "object",
+                "properties": {
+                    "x1": {
+                        "title": "X1",
+                        "type": "integer"
+                    },
+                    "y1": {
+                        "title": "Y1",
+                        "type": "integer"
+                    },
+                    "x2": {
+                        "title": "X2",
+                        "type": "integer"
+                    },
+                    "y2": {
+                        "title": "Y2",
+                        "type": "integer"
+                    }
+                }
+            },
+            "Detection": {
+                "title": "Detection",
+                "required": [
+                    "bbox",
+                    "confidence",
+                    "class_id",
+                    "class_name"
+                ],
+                "type": "object",
+                "properties": {
+                    "bbox": {
+                        "$ref": "#/components/schemas/BoundingBox"
+                    },
+                    "confidence": {
+                        "title": "Confidence",
+                        "type": "number"
+                    },
+                    "class_id": {
+                        "title": "Class Id",
+                        "type": "integer"
+                    },
+                    "class_name": {
+                        "title": "Class Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "ModelsResponse": {
+                "title": "ModelsResponse",
+                "required": [
+                    "models"
+                ],
+                "type": "object",
+                "properties": {
+                    "models": {
+                        "title": "Models",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "PredictionResponse": {
+                "title": "PredictionResponse",
+                "required": [
+                    "success",
+                    "model_name",
+                    "detections"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "model_name": {
+                        "title": "Model Name",
+                        "type": "string"
+                    },
+                    "inference_time_ms": {
+                        "title": "Inference Time Ms",
+                        "type": "number"
+                    },
+                    "image_width": {
+                        "title": "Image Width",
+                        "type": "integer"
+                    },
+                    "image_height": {
+                        "title": "Image Height",
+                        "type": "integer"
+                    },
+                    "detections": {
+                        "title": "Detections",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Detection"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
