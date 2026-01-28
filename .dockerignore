@@ -1,0 +1,39 @@
+# Dependencies
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+pubspec.lock
+
+# Flutter/Dart specific
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE specific
+.idea/
+*.iml
+.vscode/
+
+# macOS specific
+.DS_Store
+*.swp
+
+# Android specific
+android/.gradle/
+android/captures/
+android/local.properties
+android/**/GeneratedPluginRegistrant.*
+
+# iOS specific
+ios/.symlinks/
+ios/Pods/
+ios/Flutter/flutter_export_environment.sh
+ios/**/GeneratedPluginRegistrant.*
+
+# Test coverage
+coverage/
+
+# Miscellaneous
+*.log
+*.pyc

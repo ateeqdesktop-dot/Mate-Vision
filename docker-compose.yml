@@ -1,36 +1,17 @@
 services:
-  api:
+  mate-vision-app:
     build:
       context: .
-      network: host
-    networks:
-      - mate-network
-    volumes:
-      - ./models:/app/models:ro
-    environment:
-      - MODELS_DIR=/app/models
-      - CONFIDENCE_THRESHOLD=0.5
-      - IOU_THRESHOLD=0.45
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  web:
-    build:
-      context: ./mobile_app
-      network: host
+      dockerfile: Dockerfile
+      args:
+        API_BASE_URL: ${API_BASE_URL:-http://host.docker.internal:8000}
+    container_name: mate-vision-flutter-app
     ports:
-      - "80:80"
-    networks:
-      - mate-network
-    depends_on:
-      - api
+      - "3000:80"
     restart: unless-stopped
+    networks:
+      - mate-vision-network
 
 networks:
-  mate-network:
+  mate-vision-network:
     driver: bridge
